@@ -1,3 +1,4 @@
+package PART1;
 import java.io.*;
 
 public class EditableBufferedReader extends BufferedReader {

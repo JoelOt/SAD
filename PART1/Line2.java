@@ -1,14 +1,14 @@
+package PART1;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package readLine;
 
 /**
  *
  * @author ariadna
  */
-public class Line {
+public class Line2 {
 
     protected StringBuilder text;
     protected static int posCursor;
@@ -17,7 +17,7 @@ public class Line {
     protected String fi;
 
 
-    public Line() {
+    public Line2() {
         text = new StringBuilder();
         inici = new String();
         fi = new String();

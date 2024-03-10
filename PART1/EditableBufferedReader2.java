@@ -1,4 +1,4 @@
-package readLine;
+package PART1;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -17,6 +17,8 @@ DEL: ESC [ 3 ~
 END: ESC [ 4 ~
 */
 
+import MVC.Keys;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -25,9 +27,9 @@ END: ESC [ 4 ~
  *
  * @author ariadna
  */
-public class EditableBufferedReader extends BufferedReader {
+public class EditableBufferedReader2 extends BufferedReader {
 
-    public EditableBufferedReader(Reader in) {
+    public EditableBufferedReader2(Reader in) {
         super(in);
     }
 
@@ -163,7 +165,7 @@ public class EditableBufferedReader extends BufferedReader {
     }
 
     public String readLine() throws IOException {
-        Line line = new Line();
+        Line2 line = new Line2();
         try {
             setRaw();
         } catch (InterruptedException ex) {

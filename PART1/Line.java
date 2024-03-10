@@ -1,3 +1,5 @@
+package PART1;
+
 public class Line {  //classe linia que conte la linia que s'esta escrivint i el cursor
     StringBuilder linia;  //linia que s'esta escrivint
     int cursor;  //posicio del cursor
