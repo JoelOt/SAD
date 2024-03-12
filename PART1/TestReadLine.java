@@ -1,9 +1,9 @@
-package MVC;
+package PART1;
 import java.io.*;
 
 public class TestReadLine {
     public static void main(String[] args) {
-        BufferedReader in = new EditableBufferedReaderPropetyChange(
+        BufferedReader in = new EditableBufferedReader2(
             new InputStreamReader(System.in));
         String str = null;
         try {
