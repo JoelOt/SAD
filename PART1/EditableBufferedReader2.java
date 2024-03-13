@@ -1,10 +1,12 @@
-package PART1;
+package readLine;
 
+import java.io.IOException;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 /*
 parse:
 HOME: ESC O H 
@@ -15,10 +17,9 @@ HOME: ESC [ 1 ~
 INS: ESC [ 2 ~
 DEL: ESC [ 3 ~
 END: ESC [ 4 ~
-*/
+ */
 
-
-/*
+ /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
@@ -26,9 +27,9 @@ END: ESC [ 4 ~
  *
  * @author ariadna
  */
-public class EditableBufferedReader2 extends BufferedReader {
+public class EditableBufferedReader extends BufferedReader {
 
-    public EditableBufferedReader2(Reader in) {
+    public EditableBufferedReader(Reader in) {
         super(in);
     }
 
@@ -54,35 +55,47 @@ public class EditableBufferedReader2 extends BufferedReader {
             ie.printStackTrace();
         }
     }*/
-    public static void setRaw() throws IOException, InterruptedException {
+    public static void setRaw() {
 
         List<String> command = new ArrayList<>();
         command.add("/bin/sh");
         command.add("-c");
         command.add("stty -echo raw");
 
-        ProcessBuilder pb = new ProcessBuilder(command);
+        try {
+            ProcessBuilder pb = new ProcessBuilder(command);
 
-        pb.inheritIO();
+            pb.inheritIO();
 
-        Process p = pb.start();
-        p.waitFor();
+            Process p = pb.start();
+            p.waitFor(); // Esperem a que el terminal canvi el mode
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    public static void unsetRaw() throws IOException, InterruptedException { // passa de mode RAW a COOKED
+    public static void unsetRaw() { // passa de mode RAW a COOKED
 
         List<String> command = new ArrayList<>();
         command.add("/bin/sh");
         command.add("-c");
         command.add("reset");
 
-        ProcessBuilder pb = new ProcessBuilder(command);
+        try {
+            ProcessBuilder pb = new ProcessBuilder(command);
 
-        pb.inheritIO();
+            pb.inheritIO();
 
-        Process p = pb.start();
-        p.waitFor();
+            Process p = pb.start();
+            p.waitFor(); // Esperem a que el terminal canvi el mode
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -132,84 +145,109 @@ public class EditableBufferedReader2 extends BufferedReader {
         }
         
         return nextChar;
-*/
+         */
+
         int c = super.read();
-        if (c != Keys.ESCAPE)
+        if (c != Keys.ESCAPE) {
             return c;
-        switch(c = super.read()){
+        }
+        switch (c = super.read()) {
             case 'O':
-                switch (c = super.read()){
-                    case 'H': return Keys.HOME;
-                    case 'F': return Keys.END;
-                    default: return c;
-                    
+                switch (c = super.read()) {
+                    case 'H':
+                        return Keys.HOME;
+                    case 'F':
+                        return Keys.END;
+                    default:
+                        return c;
+
                 }
             case '[':
-                switch(c = super.read()){
-                    case 'D' : return Keys.LEFT;
-                    case 'C': return Keys.RIGHT;
-                    case '1': if(super.read() == '~')
-                                    return Keys.HOME;
-                    case '2': if(super.read() == '~')
-                                    return Keys.INS;
-                    case '3': if(super.read() == '~')
-                                    return Keys.DEL;
-                    case '4': if(super.read() == '~')
-                                    return Keys.END;
-                    default: return c;
-                    
+                switch (c = super.read()) {
+                    case 'D':
+                        return Keys.LEFT;
+                    case 'C':
+                        return Keys.RIGHT;
+                    case '1':
+                        if (super.read() == '~') {
+                            return Keys.HOME;
+                        }
+                    case '2':
+                        if (super.read() == '~') {
+                            return Keys.INS;
+                        }
+                    case '3':
+                        if (super.read() == '~') {
+                            return Keys.DEL;
+                        }
+                    case '4':
+                        if (super.read() == '~') {
+                            return Keys.END;
+                        }
+                    default:
+                        return c;
+
                 }
-            default: return c;
-        }   
+            default:
+                return c;
+        }
+
     }
 
     public String readLine() throws IOException {
-        Line2 line = new Line2();
-        try {
-            setRaw();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(EditableBufferedReader.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Line line = new Line();
+        this.setRaw();
 
         int r = read();
         while (r != Keys.RETURN) {
             switch (r) {
                 case Keys.LEFT:
-                    if (line.moveCursorLeft())
+                    if (line.moveCursorLeft()) {
                         System.out.print(Keys.ANSI_LEFT);
+                    }
                     break;
                 case Keys.END:
                     line.moveCursorFin();
                     System.out.print(Keys.ANSI_END);
                     break;
                 case Keys.RIGHT:
-                    if (line.moveCursorRight())
+                    if (line.moveCursorRight()) {
                         System.out.print(Keys.ANSI_RIGHT);
+                    }
                     break;
                 case Keys.HOME:
                     line.moveCursorHome();
                     System.out.print(Keys.ANSI_HOME);
                     break;
                 case Keys.DEL:
-                    line.delete();
-                    System.out.print(Keys.ANSI_DEL);
+                    if (line.delete()){
+                        System.out.print(Keys.ANSI_DEL);
+                    }
                     break;
-                case Keys.INS:
-                    line.ins();
-                    System.out.print(Keys.ANSI_HOME);
-                    break;
+                //case Keys.INS:
+                //line.ins();
+                //System.out.print();
+                //break;
                 default:
-                    line.add((char)r);
-                    System.out.print((char) r);
+                    if (line.getCursorPosition() == line.text.length()) {
+                        line.add((char) r);
+                        System.out.print((char) r);
+                    } else {
+                        if (!line.modeins) {
+                            line.add((char) r);
+                            for(int i = 0; i < line.text.length(); i++){
+                                System.out.print("\b \b");
+                            }
+                            System.out.print(line.text.toString());
+                            System.out.print("\u001B[" + line.getCursorPosition() + "G");
+                        }
+                    }
             }
             r = read();
         }
+
+        this.unsetRaw();
         
-        try {
-            this.unsetRaw();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(EditableBufferedReader.class.getName()).log(Level.SEVERE, null, ex);
-        }
         return line.getText();
     }
 
