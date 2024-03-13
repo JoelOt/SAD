@@ -1,4 +1,4 @@
-package readLine;
+package PART1;
 
 import java.io.IOException;
 import java.io.*;
@@ -27,9 +27,9 @@ END: ESC [ 4 ~
  *
  * @author ariadna
  */
-public class EditableBufferedReader extends BufferedReader {
+public class EditableBufferedReader2 extends BufferedReader {
 
-    public EditableBufferedReader(Reader in) {
+    public EditableBufferedReader2(Reader in) {
         super(in);
     }
 
@@ -195,7 +195,7 @@ public class EditableBufferedReader extends BufferedReader {
     }
 
     public String readLine() throws IOException {
-        Line line = new Line();
+        Line2 line = new Line2();
         this.setRaw();
 
         int r = read();
