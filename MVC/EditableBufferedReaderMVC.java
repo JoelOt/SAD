@@ -1,5 +1,8 @@
 package MVC;
-import java.io.*;
+
+import PART1.Keys;
+
+ import java.io.*;
  import java.util.ArrayList;
  import java.util.List;
  import java.util.logging.Level;
@@ -29,28 +32,7 @@ import java.io.*;
          super(in);
      }
  
-     /*
-     public static void main(String[] args) {
-         try {
-             
-             System.out.println("passem a mode raw");
-             setRaw();
-             Thread.sleep(3000);
-             unsetRaw();
-             System.out.println("Hem tornat a mode cooked");
-              
- 
-             BufferedReader in = new EditableBufferedReader(
-                    new InputStreamReader(System.in));
- 
-             int c = in.read();
- 
-             System.out.println("Caràcter llegit:" + c);
- 
-         } catch (IOException ie) {
-             ie.printStackTrace();
-         }
-     }*/
+    
      public static void setRaw() throws IOException, InterruptedException {
  
          List<String> command = new ArrayList<>();
@@ -84,52 +66,7 @@ import java.io.*;
      }
  
      public int read() throws IOException {
-         /*
-         int nextChar = super.read();
-         if (nextChar == Line.ANSI_ESCAPE) {
- 
-             nextChar = super.read(); // Leer el siguiente carácter para determinar si es una secuencia de escape
- 
-             if (nextChar == '[') { // Si es una secuencia de escape, leer el tercer carácter (el comando de control)
- 
-                 nextChar = super.read();
-                 
-                 switch (nextChar) {
-                     case 'C':
-                         return Line.LEFTS;
-                     case 'D':
-                         return Line.CURSOR_FORWARD;
-                     case 'H':
-                         return Line.HOME;
-                     case 'F':
-                         return Line.END;
-                     case '2':
-                         nextChar = super.read();
-                         
-                         return Line.INS;
-                     case '3':
-                         nextChar = super.read();
-                         return Line.DELETE;
-                     default:
-                         nextChar = super.read();
-                         break;
- 
-                 }
- 
-             }
-         }
-         
-         if (nextChar == Line.EOT | nextChar == Line.EXIT) {
-             try {
-                 this.unsetRaw();
-             } catch (InterruptedException ex) {
-                 Logger.getLogger(EditableBufferedReader.class.getName()).log(Level.SEVERE, null, ex);
-             }
-             System.exit(0);
-         }
-         
-         return nextChar;
- */
+        
          int c = super.read();
          if (c != Keys.ESCAPE)
              return c;
@@ -188,7 +125,7 @@ import java.io.*;
                      line.delete();
                      break;
                  case Keys.INS:
-                     line.ins();
+                     line.modeins();
                      break;
                  default:
                      line.add((char)r);
