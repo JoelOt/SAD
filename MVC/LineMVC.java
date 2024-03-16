@@ -1,6 +1,7 @@
 package MVC;
 
 import java.util.Observable;
+import PART1.Keys;
 
 public class LineMVC extends Observable{
     protected StringBuilder text;
@@ -39,11 +40,16 @@ public class LineMVC extends Observable{
 
     }
 
-    public void delete() {
-        text.deleteCharAt(posCursor);
-        posCursor--;
-        this.notifyObservers(Keys.ANSI_DEL);
-    }
+    public boolean delete() {
+            if (posCursor > 0){
+                text.deleteCharAt(posCursor-1);
+                posCursor--;
+                return true;
+            }else{
+                return false;
+            }
+        }
+
 
     public boolean moveCursorLeft() {
         if (posCursor == 0){
@@ -75,10 +81,10 @@ public class LineMVC extends Observable{
 
 public void moveCursorFin() {
         posCursor = text.length();
-        this.notifyObservers(Keys.ANSI_END);
+        this.notifyObservers("\033" + '[' + (this.getCursorPosition()+1) + "G");
     }
 
-    public void ins() { // CONMUTA SOBRE INSERTAR/SOBREESCRIURE
+    public void modeins() { // CONMUTA SOBRE INSERTAR/SOBREESCRIURE
         modeins = !modeins;
         this.notifyObservers(Keys.ANSI_INS);
     }
