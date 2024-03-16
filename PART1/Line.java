@@ -1,63 +1,106 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package PART1;
 
-public class Line {  //classe linia que conte la linia que s'esta escrivint i el cursor
-    StringBuilder linia;  //linia que s'esta escrivint
-    int cursor;  //posicio del cursor
+/**
+ *
+ * @author ariadna
+ */
+public class Line {
 
-    public Line(){ 
-        linia = new StringBuilder();
-        cursor = 0;
+    protected StringBuilder text;
+    protected static int posCursor;
+    protected boolean modeins;
+    protected String inici;
+    protected String fi;
+
+
+    public Line() {
+        text = new StringBuilder();
+        inici = new String();
+        fi = new String();
+        posCursor = 0;
+        modeins = false;
+
     }
 
-    public String getlinia(){  //retorna la linia
-        return linia.toString();
-    }
-
-    public int getCursor(){  //retorna la posicio del cursor
-        return cursor;
-    }
-    
-    public void printline() {  //imprimeix la linia
-        if(cursor>0){
-            String text = this.getlinia().toString();
-            for(int i=0;i<text.length();i++){
-                if(i==cursor){
-                    System.out.print("\u001b[7m");  //highlight pos cursor
-                    System.out.print(text.charAt(i));
-                    System.out.print("\u001b[0m"); //treure el hisghlight
-                }else{
-                    System.out.print(text.charAt(i));
-                }
+    public void add(char c) {
+        
+        if(posCursor == text.length()){
+            text.append(c);
+        }else{
+            if(!modeins){
+                fi = text.substring(posCursor);
+                text.setLength(posCursor);
+                text.append(c);
+                text.append(fi);
+            }else{
+                fi = text.substring(posCursor-1);
+                
+                text.setLength(posCursor-1);
+                text.append(c);
+                text.append(fi);
             }
         }
+        if(!modeins){
+        posCursor++;
+        }
 
+    }
+
+    public boolean delete() {
+        if (posCursor > 0){
+            text.deleteCharAt(posCursor-1);
+            posCursor--;
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    public boolean moveCursorLeft() {
+        if (posCursor == 0){
+            return false;
+        }else {
+            posCursor--;
+            return true;
+        }
+    }
+
+    public boolean moveCursorRight() {
+        
+        if (posCursor == text.length()){
+            return false;
+        }else {
+            posCursor++;
+            return true;
+        }
+
+    }
+
+    public void moveCursorHome() {
+        posCursor = 0;
+
+    }
+
+public void moveCursorFin() {
+        posCursor = text.length();
+    }
+
+    public void modeins() { // CONMUTA SOBRE INSERTAR/SOBREESCRIURE
+        modeins = !modeins;
     }
     
-    public void Add_car(char c){  //afegeix el caracter c a la posicio del cursor al escriure
-        linia.insert(cursor, c);
-        cursor = cursor + 1;
-        
+    
+
+    public String getText() {
+        return text.toString();
     }
 
-    public void Delete_car(){  //si es prem "backspace" esborra el caracter que hi ha davant del cursor
-        linia = linia.deleteCharAt(cursor - 1);
-        cursor = cursor - 1;
-    }
-
-    public void Move_cursor_left(){  //si es prem "left" el cursor es mou una posicio a l'esquerra           
-        if(cursor > 0){
-            cursor = cursor - 1;
-        }
-    }
-
-    public void Move_cursor_right(){  //si es prem "right" el cursor es mou una posicio a la dreta
-        if(cursor < linia.length()){
-            cursor = cursor + 1;
-        }
-    }
-
-    public void Move_cursor_home(){  //si es prem "home" el cursor es mou a la posicio inicial
-        cursor = 0;
+    public int getCursorPosition() {
+        return posCursor;
     }
 
 }
