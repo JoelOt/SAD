@@ -1,4 +1,6 @@
-package MVC;
+package PROPETY_CHANGE;
+
+import PART1.Keys;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -23,27 +25,42 @@ public class LineSupport {
         return text.toString();
     }
 
+    public int getCursorPosition() {
+        return posCursor;
+    }
+
     public void add(char c) {
         if (posCursor == text.length()) {
             text.append(c);
-        } else {
-            fi = text.substring(posCursor);
-            text.setLength(posCursor);
-            text.append(c);
-            text.append(fi);
+            propertyChangeSupport.firePropertyChange("text", null, c);
+        }else{
+            propertyChangeSupport.firePropertyChange("delall", null, Keys.ANSI_DEL_UNTIL_END);
+            if(!modeins){
+                fi = text.substring(posCursor);
+                text.setLength(posCursor);
+                text.append(c);
+                text.append(fi);
+                propertyChangeSupport.firePropertyChange("text", null, c + this.fi.toString() + "\033" + '[' + (this.getCursorPosition()+1) + "G");
+
+            }else{
+                fi = text.substring(posCursor-1);
+                text.setLength(posCursor-1);
+                text.append(c);
+                text.append(fi);
+                propertyChangeSupport.firePropertyChange("text", null, c + this.fi.toString() + "\033" + '[' + (this.getCursorPosition()+1) + "G");
+            }
         }
-        posCursor++;
-        propertyChangeSupport.firePropertyChange("text", null, c);
+        if (!modeins) {
+            posCursor++;
+        }
     }
 
-    public void delete() {
+    public void delete() {  //
         text.deleteCharAt(posCursor);
-        String aux = MVC.Keys.ANSI_DEL;
         posCursor--;
-        propertyChangeSupport.firePropertyChange("text", null, aux);
+        propertyChangeSupport.firePropertyChange("text", null, Keys.ANSI_LEFT + Keys.ANSI_DEL);
     }
-
-    public boolean moveCursorLeft() {
+    public boolean moveCursorLeft() {  //
         if (posCursor == 0) {
             return false;
         } else {
@@ -53,7 +70,7 @@ public class LineSupport {
         }
     }
 
-    public boolean moveCursorRight() {
+    public boolean moveCursorRight() { //
         if (posCursor == text.length()) {
             return false;
         } else {
@@ -63,20 +80,19 @@ public class LineSupport {
         }
     }
 
-    public void moveCursorHome() {
+    public void moveCursorHome() {  //
         posCursor = 0;
         propertyChangeSupport.firePropertyChange("text", null, Keys.ANSI_HOME);
 
     }
 
-    public void moveCursorFin() {
+    public void moveCursorFin() { //
         posCursor = text.length();
-        propertyChangeSupport.firePropertyChange("text", null, Keys.ANSI_END);
+        propertyChangeSupport.firePropertyChange("text", null, Keys.ANSI_HOME + Keys.ANSI_ESC + '[' + this.getCursorPosition() + 'C');
     }
 
-    public void ins() { // CONMUTA SOBRE INSERTAR/SOBREESCRIURE
+    public void modeins() { // CONMUTA SOBRE INSERTAR/SOBREESCRIURE
         modeins = !modeins;
-        propertyChangeSupport.firePropertyChange("text", null, Keys.ANSI_INS);
     }
 
 

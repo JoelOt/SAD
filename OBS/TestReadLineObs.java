@@ -1,9 +1,10 @@
-package MVC2;
+package OBS;
+
 import java.io.*;
 
-public class TestReadLine {
+public class TestReadLineObs{
     public static void main(String[] args) {
-        BufferedReader in = new EditableBufferedReaderPropetyChange(
+        BufferedReader in = new EditableBufferedReaderObs(
             new InputStreamReader(System.in));
         String str = null;
         try {

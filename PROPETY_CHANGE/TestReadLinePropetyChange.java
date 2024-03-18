@@ -1,7 +1,7 @@
-package MVC;
+package PROPETY_CHANGE;
 import java.io.*;
 
-public class TestReadLine {
+public class TestReadLinePropetyChange {
     public static void main(String[] args) {
         BufferedReader in = new EditableBufferedReaderPropetyChange(
             new InputStreamReader(System.in));

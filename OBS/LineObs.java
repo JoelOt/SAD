@@ -1,70 +1,63 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-package PART1;
+package OBS;
 
-/**
- *
- * @author ariadna
- */
-public class Line2 {
 
+import java.util.Observable;
+import PART1.Keys;
+
+public class LineObs extends Observable{
     protected StringBuilder text;
     protected static int posCursor;
     protected boolean modeins;
     protected String inici;
     protected String fi;
 
-
-    public Line2() {
+    public LineObs(){ 
         text = new StringBuilder();
         inici = new String();
         fi = new String();
         posCursor = 0;
         modeins = false;
 
+        ConsoleObs con = new ConsoleObs(this);
+        this.addObserver(con);
     }
+   
 
     public void add(char c) {
         
         if(posCursor == text.length()){
             text.append(c);
+
         }else{
-            if(!modeins){
-                fi = text.substring(posCursor);
-                text.setLength(posCursor);
-                text.append(c);
-                text.append(fi);
-            }else{
-                fi = text.substring(posCursor-1);
-                
-                text.setLength(posCursor-1);
-                text.append(c);
-                text.append(fi);
-            }
+            fi = text.substring(posCursor);
+            text.setLength(posCursor);
+            text.append(c);
+            text.append(fi);
+            
+            
         }
-        if(!modeins){
         posCursor++;
-        }
+        this.notifyObservers(c);
 
     }
 
     public boolean delete() {
-        if (posCursor > 0){
-            text.deleteCharAt(posCursor-1);
-            posCursor--;
-            return true;
-        }else{
-            return false;
+            if (posCursor > 0){
+                text.deleteCharAt(posCursor-1);
+                posCursor--;
+                return true;
+            }else{
+                return false;
+            }
         }
-    }
+
 
     public boolean moveCursorLeft() {
         if (posCursor == 0){
             return false;
         }else {
             posCursor--;
+            this.notifyObservers(Keys.ANSI_LEFT);
             return true;
         }
     }
@@ -75,6 +68,7 @@ public class Line2 {
             return false;
         }else {
             posCursor++;
+            this.notifyObservers(Keys.ANSI_RIGHT);
             return true;
         }
 
@@ -82,18 +76,19 @@ public class Line2 {
 
     public void moveCursorHome() {
         posCursor = 0;
+        this.notifyObservers(Keys.ANSI_HOME);
 
     }
 
 public void moveCursorFin() {
         posCursor = text.length();
+        this.notifyObservers("\033" + '[' + (this.getCursorPosition()+1) + "G");
     }
 
     public void modeins() { // CONMUTA SOBRE INSERTAR/SOBREESCRIURE
         modeins = !modeins;
+        this.notifyObservers(Keys.ANSI_INS);
     }
-    
-    
 
     public String getText() {
         return text.toString();

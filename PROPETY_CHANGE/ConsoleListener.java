@@ -1,4 +1,4 @@
-package MVC;
+package PROPETY_CHANGE;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
