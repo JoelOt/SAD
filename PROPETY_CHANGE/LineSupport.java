@@ -25,6 +25,8 @@ public class LineSupport {
         return text.toString();
     }
 
+    //sssssssss
+    
     public int getCursorPosition() {
         return posCursor;
     }
